@@ -7,25 +7,13 @@ namespace Mandelbrot
 {
     enum WindowSettings
     {
-        windowWidth  = 1600,
-        windowHeight =  900,
+        windowWidth  = 640,
+        windowHeight = 360,
     };
 
-    enum Errors
-    {
-        PixelsAreNullptr = 1,
-
-    };
-
-    int maxCounters = 256;
-
-    float x0 = -2;
-    float y0 = -1;
+    int maxCounters  = 512;
 
     float radiusSquaredMax = 100.f;
-
-    float dx = 4.f / windowWidth;
-    float dy = 2.f / windowHeight;
 
 } // namespace Mandelbrot
 
