@@ -2,7 +2,7 @@
 
 This branch uses AVX2 optimisations.
 
-8 calculatings in a tick using Intel Intrinsics __m256
+4 double-precision calculatings in a tick using Intel Intrinsics __m256
 
 ### Control Hotkeys:
 

@@ -25,17 +25,17 @@ namespace Mandelbrot
 
         // unsigned int colorscheme(unsigned int number);
 
-        float xCurrentCenter = 0;
-        float yCurrentCenter = 0;
+        double xCurrentCenter = 0;
+        double yCurrentCenter = 0;
 
         // initial scale to see almost full mandelbrot
-        float scale          = 0.25f;
+        double scale          = 0.25;
 
-        float x0_init = 0;
-        float y0_init = 0;
+        double x0_init = 0;
+        double y0_init = 0;
 
         // dx = -dy = delta
-        float delta   = 0;
+        double delta   = 0;
     };
 
 } // namespace Mandelbrot

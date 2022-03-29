@@ -82,61 +82,61 @@ int GetMandelbrotSet(Mandelbrot::Config &config)
 {
     if (config.pixels == nullptr) return Mandelbrot::PixelsAreNullptr;
 
-    float x0_init = config.x0_init;
-    float y0_init = config.y0_init;
+    double x0_init   = config.x0_init;
+    double y0_init   = config.y0_init;
 
-    __m256 _76543210 = _mm256_set_ps(7, 6, 5, 4, 3, 2, 1, 0);
+    __m256d _3210    = _mm256_set_pd(3, 2, 1, 0);
 
-    __m256 dx          = _mm256_set1_ps(config.delta);
-    __m256 _76543210dx = _mm256_mul_ps(_76543210, dx);
+    __m256d dx       = _mm256_set1_pd(config.delta);
+    __m256d _3210dx  = _mm256_mul_pd(_3210, dx);
 
-    __m256 r2Max       = _mm256_set1_ps(Mandelbrot::radiusSquaredMax);
+    __m256d r2Max    = _mm256_set1_pd(Mandelbrot::radiusSquaredMax);
 
-    float dy = - config.delta;
-    float y0_single = y0_init;
+    double dy        = - config.delta;
+    double y0_single = y0_init;
 
     for (int i = 0; i < Mandelbrot::windowHeight; ++i)
     {
-        __m256 x0 = _mm256_add_ps(_mm256_set1_ps(x0_init), _76543210dx);
-        __m256 y0 = _mm256_set1_ps(y0_single);
+        __m256d x0 = _mm256_add_pd(_mm256_set1_pd(x0_init), _3210dx);
+        __m256d y0 = _mm256_set1_pd(y0_single);
 
-        for (int j = 0; j < Mandelbrot::windowWidth; j += 8)
+        for (int j = 0; j < Mandelbrot::windowWidth; j += 4)
         {
             __m256i N = _mm256_setzero_si256();
 
             int n = 0;
 
-            __m256  x = x0, y = y0;
+            __m256d  x = x0, y = y0;
 
             do
             {
-                __m256  x2 = _mm256_mul_ps(x, x);
-                __m256  y2 = _mm256_mul_ps(y, y);
+                __m256d  x2 = _mm256_mul_pd(x, x);
+                __m256d  y2 = _mm256_mul_pd(y, y);
 
-                __m256  r2 = _mm256_add_ps(x2, y2);
+                __m256d  r2 = _mm256_add_pd(x2, y2);
 
-                __m256 cmp = _mm256_cmp_ps(r2, r2Max, _CMP_LE_OQ);
-                int   mask = _mm256_movemask_ps(cmp);
+                __m256d cmp = _mm256_cmp_pd(r2, r2Max, _CMP_LE_OQ);
+                int    mask = _mm256_movemask_pd(cmp);
                 if (mask  == 0) break;       // all points are out
 
-                N = _mm256_sub_epi32(N, _mm256_castps_si256(cmp));
+                N = _mm256_sub_epi64(N, _mm256_castpd_si256(cmp));
                 // this command returns negative value ^
 
-                __m256 xy = _mm256_mul_ps(x, y);
+                __m256d xy = _mm256_mul_pd(x, y);
 
-                x = _mm256_add_ps(_mm256_sub_ps(x2, y2), x0);
-                y = _mm256_add_ps(_mm256_add_ps(xy, xy), y0);
+                x = _mm256_add_pd(_mm256_sub_pd(x2, y2), x0);
+                y = _mm256_add_pd(_mm256_add_pd(xy, xy), y0);
             }
             while (++n < Mandelbrot::maxCounter);
 
-            for (int nColor = 0; nColor < 8; nColor++)
+            for (int nColor = 0; nColor < 4; nColor++)
             {
-                int *colors = (int *) &N;
+                long long *colors = (long long *) &N;
 
                 ConfigPixel(config, Mandelbrot::windowWidth * i + j + nColor, colors[nColor]);
             }
 
-            x0 = _mm256_add_ps(x0, _mm256_mul_ps(_mm256_set1_ps(8), dx));
+            x0 = _mm256_add_pd(x0, _mm256_mul_pd(_mm256_set1_pd(4), dx));
         }
 
         y0_single += dy;

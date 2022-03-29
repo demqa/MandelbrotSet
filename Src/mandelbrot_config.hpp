@@ -13,7 +13,7 @@ namespace Mandelbrot
 
     int maxCounter   = 300;
 
-    float radiusSquaredMax = 4.f;
+    double radiusSquaredMax = 4;
 
 } // namespace Mandelbrot
 
