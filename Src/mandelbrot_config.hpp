@@ -11,10 +11,12 @@ namespace Mandelbrot
         windowHeight = 720,
     };
 
-    int maxCounter   = 300;
+    int maxCounter   = 500;
 
     double radiusSquaredMax = 4;
 
+    const char *  fontSrc   = "Src/Ubuntu-Monospace.ttf";
+    const char *formatStr   = "%3.2lf  ";
 } // namespace Mandelbrot
 
 #endif // MANDELBROT_CONFIG_H_

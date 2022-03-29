@@ -5,6 +5,7 @@
 #include <immintrin.h>
 #include <cmath>
 #include <cstdlib>
+#include <string.h>
 
 namespace Mandelbrot
 {
@@ -18,12 +19,17 @@ namespace Mandelbrot
     struct Config
     {
         sf::RenderWindow &window;
+        sf::Clock        & clock;
+        sf::Font         &  font;
 
         unsigned int     *pixels;
+        char             *string;
+
 
         // current settings of Mandelbrot
 
         // unsigned int colorscheme(unsigned int number);
+        float             FPS = 0;
 
         double xCurrentCenter = 0;
         double yCurrentCenter = 0;
