@@ -1,6 +1,8 @@
 ## MandelbrotSet visualizer using SFML
 
-It will contain SIMD optimizations, such as AVX2, to increase performance
+This branch uses AVX2 optimisations.
+
+8 calculatings in a tick using Intel Intrinsics __mm_256
 
 ### Control Hotkeys:
 
