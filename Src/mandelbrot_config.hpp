@@ -11,7 +11,7 @@ namespace Mandelbrot
         windowHeight = 720,
     };
 
-    int maxCounter   = 1000;
+    int maxCounter   = 500;
 
     double radiusSquaredMax = 4;
 
