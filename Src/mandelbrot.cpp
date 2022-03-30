@@ -3,35 +3,14 @@
 namespace Mandelbrot
 {
 
-inline void ZoomIn(Mandelbrot::Config &config)
-{
-    config.scale *= 0.5f;
-}
+inline void ZoomIn   (Mandelbrot::Config &config){ config.scale *= 0.5f;  }
+inline void ZoomOut  (Mandelbrot::Config &config){ config.scale *= 2.f;   }
+inline void Close    (Mandelbrot::Config &config){ config.window.close(); }
 
-inline void ZoomOut(Mandelbrot::Config &config)
-{
-    config.scale *= 2.f;
-}
-
-inline void MoveLeft(Mandelbrot::Config &config)
-{
-    config.xCurrentCenter -= 10 * config.delta;
-}
-
-inline void MoveRight(Mandelbrot::Config &config)
-{
-    config.xCurrentCenter += 10 * config.delta;
-}
-
-inline void MoveUp(Mandelbrot::Config &config)
-{
-    config.yCurrentCenter += 10 * config.delta;
-}
-
-inline void MoveDown(Mandelbrot::Config &config)
-{
-    config.yCurrentCenter -= 10 * config.delta;
-}
+inline void MoveLeft (Mandelbrot::Config &config){ config.xCurrentCenter -= 10 * config.delta; }
+inline void MoveRight(Mandelbrot::Config &config){ config.xCurrentCenter += 10 * config.delta; }
+inline void MoveUp   (Mandelbrot::Config &config){ config.yCurrentCenter += 10 * config.delta; }
+inline void MoveDown (Mandelbrot::Config &config){ config.yCurrentCenter -= 10 * config.delta; }
 
 inline int ProceedKeyboard(Mandelbrot::Config &config, sf::Event &event)
 {
@@ -40,22 +19,20 @@ inline int ProceedKeyboard(Mandelbrot::Config &config, sf::Event &event)
         using namespace Mandelbrot;
         switch (event.key.code)
         {
-            case sf::Keyboard::Key::Left:
-            case sf::Keyboard::Key::H:     MoveLeft (config); break;
-            case sf::Keyboard::Key::Down:
-            case sf::Keyboard::Key::J:     MoveDown (config); break;
-            case sf::Keyboard::Key::Up:
-            case sf::Keyboard::Key::K:     MoveUp   (config); break;
-            case sf::Keyboard::Key::Right:
-            case sf::Keyboard::Key::L:     MoveRight(config); break;
+            case sf::Keyboard::Key::H:
+            case sf::Keyboard::Key::Left:  MoveLeft (config); break;
+            case sf::Keyboard::Key::J:
+            case sf::Keyboard::Key::Down:  MoveDown (config); break;
+            case sf::Keyboard::Key::K:
+            case sf::Keyboard::Key::Up:    MoveUp   (config); break;
+            case sf::Keyboard::Key::L:
+            case sf::Keyboard::Key::Right: MoveRight(config); break;
 
-            case sf::Keyboard::Key::A:     ZoomIn (config); break;
-            case sf::Keyboard::Key::S:     ZoomOut(config); break;
+            case sf::Keyboard::Key::A:     ZoomIn   (config); break;
+            case sf::Keyboard::Key::S:     ZoomOut  (config); break;
+            case sf::Keyboard::Key::Q:     Close    (config); break;
 
-            case sf::Keyboard::Key::Q:     break;
-
-            default:
-                                           break;
+            default:                                          break;
         }
     }
 
@@ -71,11 +48,13 @@ int WindowDraw(Mandelbrot::Config &config)
     sf::Texture texture;
 
     image.create(Mandelbrot::windowWidth, Mandelbrot::windowHeight, (unsigned char *) config.pixels);
-    // image.saveToFile("cringe.png");
     if (!texture.loadFromImage(image)) return Mandelbrot::FailedLoadingTexture;
     sprite.setTexture(texture);
 
+    sf::Text text(config.string, config.font);
+
     config.window.draw(sprite);
+    config.window.draw(text);
 
     return 0;
 }
@@ -88,10 +67,21 @@ inline void UpdateMandelbrotConfig(Mandelbrot::Config &config)
     config.delta   = config.scale * 16 / Mandelbrot::windowWidth;
 }
 
+inline void GetMandelbrotFPS(Mandelbrot::Config &config)
+{
+    // fuck my life
+    sf::Time time = config.clock.getElapsedTime();
+
+    config.FPS = 1.f / time.asSeconds();
+
+    sprintf(config.string, formatStr, config.FPS);
+
+    config.clock.restart();
+}
 
 inline void ConfigPixel(Mandelbrot::Config &config, int pixelIndex, int color)
 {
-    if (color != Mandelbrot::maxCounters)
+    if (color != Mandelbrot::maxCounter)
         config.pixels[pixelIndex] = 0xFF | color << 24 | color * 3 << 16 | color / 2 << 8;
     else
         config.pixels[pixelIndex] = 0xFF000000;
@@ -118,7 +108,7 @@ int GetMandelbrotSet(Mandelbrot::Config &config)
             float x = x0 * x0 - y0 * y0 + x0;
             float y = x0 * y0 + x0 * y0 + y0;
 
-            while (++n < Mandelbrot::maxCounters && x*x + y*y < Mandelbrot::radiusSquaredMax)
+            while (++n < Mandelbrot::maxCounter && x*x + y*y < Mandelbrot::radiusSquaredMax)
             {
                 float x2 = x * x;
                 float y2 = y * y;
@@ -141,10 +131,19 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(Mandelbrot::windowWidth, Mandelbrot::windowHeight), "Manbelbrot Set");
 
+    sf::Clock clock;
+    clock.restart();
+
+    sf::Font   font;
+    if (!font.loadFromFile(Mandelbrot::fontSrc)) return -3;
+
     unsigned int *pixels = (unsigned int *) calloc(Mandelbrot::windowWidth * Mandelbrot::windowHeight, 4);
     if (pixels == nullptr) return -1;
 
-    Mandelbrot::Config config = {window, pixels};
+    char *string = (char *) calloc(strlen(Mandelbrot::formatStr), sizeof(char));
+    if (string == nullptr) return -2;
+
+    Mandelbrot::Config config = {window, clock, font, pixels, string};
 
     while (window.isOpen())
     {
@@ -161,6 +160,8 @@ int main()
 
         Mandelbrot::GetMandelbrotSet(config);
 
+        Mandelbrot::GetMandelbrotFPS(config);
+
         window.clear();
 
         Mandelbrot::WindowDraw(config);
@@ -169,6 +170,7 @@ int main()
     }
 
     free(pixels);
+    free(string);
 
     return 0;
 }
