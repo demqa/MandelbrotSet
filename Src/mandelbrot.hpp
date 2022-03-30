@@ -15,7 +15,6 @@ namespace Mandelbrot
         PixelsAreNullptr     = 1,
         FailedLoadingTexture = 2,
     };
-
     struct Config
     {
         sf::RenderWindow &window;

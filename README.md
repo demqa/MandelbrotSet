@@ -1,14 +1,33 @@
-## MandelbrotSet visualizer using SFML
+# MandelbrotSet visualizer using SFML
 
-This branch uses AVX2 optimisations.
+There are 3 branches: noOptimise, AVX2 (8 floats in parallel),
+& AVX2withDoubles (4 doubles in parallel).<br>
+**master is equal to AVX2withDoubles**
 
-4 double-precision calculatings in a tick using Intel Intrinsics __m256
 
-### Control Hotkeys:
+**I measured it with my processor i5-8265U:**
 
-Moving: HJKL or arrows
+| FPS              |  500  |  1000 |
+| :--------------: | :---: | :---: |
+| noOptimise       | 3.41  | 1.75  |
+| AVX2             | 17.12 | 10.45 |
+| AVX2withDoubles  | 10.67 | 6.08  |
 
-Zoom In:  A
+### Control Hotkeys
 
-Zoom Out: S
+**Moving: HJKL or arrows**
+
+| Action   |  Hotkey |
+|   ---:   |  :---:  |
+| Zoom In  |    A    |
+| Zoom Out |    S    |
+| Close    |    Q    | 
+
+
+### Installation
+
+```
+git clone https://github.com/demqa/MandelbrotSet.git && cd MandelbrotSet
+make && ./mandelbrot
+```
 

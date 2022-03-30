@@ -48,7 +48,6 @@ int WindowDraw(Mandelbrot::Config &config)
     sf::Texture texture;
 
     image.create(Mandelbrot::windowWidth, Mandelbrot::windowHeight, (unsigned char *) config.pixels);
-    // image.saveToFile("cringe.png");
     if (!texture.loadFromImage(image)) return Mandelbrot::FailedLoadingTexture;
     sprite.setTexture(texture);
 
@@ -70,7 +69,6 @@ inline void UpdateMandelbrotConfig(Mandelbrot::Config &config)
 
 inline void GetMandelbrotFPS(Mandelbrot::Config &config)
 {
-    // fuck my life
     sf::Time time = config.clock.getElapsedTime();
 
     config.FPS = 1.f / time.asSeconds();
@@ -79,7 +77,6 @@ inline void GetMandelbrotFPS(Mandelbrot::Config &config)
 
     config.clock.restart();
 }
-
 
 inline void ConfigPixel(Mandelbrot::Config &config, int pixelIndex, int color)
 {
