@@ -38,7 +38,6 @@ inline int ProceedKeyboard(Mandelbrot::Config &config, sf::Event &event)
 
     return 0;
 }
-
 int WindowDraw(Mandelbrot::Config &config)
 {
     if (config.pixels == nullptr) return Mandelbrot::PixelsAreNullptr;
@@ -48,11 +47,13 @@ int WindowDraw(Mandelbrot::Config &config)
     sf::Texture texture;
 
     image.create(Mandelbrot::windowWidth, Mandelbrot::windowHeight, (unsigned char *) config.pixels);
-    // image.saveToFile("cringe.png");
     if (!texture.loadFromImage(image)) return Mandelbrot::FailedLoadingTexture;
     sprite.setTexture(texture);
 
+    sf::Text text(config.string, config.font);
+
     config.window.draw(sprite);
+    config.window.draw(text);
 
     return 0;
 }
@@ -65,6 +66,17 @@ inline void UpdateMandelbrotConfig(Mandelbrot::Config &config)
     config.delta   = config.scale * 16 / Mandelbrot::windowWidth;
 }
 
+inline void GetMandelbrotFPS(Mandelbrot::Config &config)
+{
+    // fuck my life
+    sf::Time time = config.clock.getElapsedTime();
+
+    config.FPS = 1.f / time.asSeconds();
+
+    sprintf(config.string, formatStr, config.FPS);
+
+    config.clock.restart();
+}
 
 inline void ConfigPixel(Mandelbrot::Config &config, int pixelIndex, int color)
 {
@@ -151,10 +163,19 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(Mandelbrot::windowWidth, Mandelbrot::windowHeight), "Manbelbrot Set");
 
+    sf::Clock clock;
+    clock.restart();
+
+    sf::Font   font;
+    if (!font.loadFromFile(Mandelbrot::fontSrc)) return -3;
+
     unsigned int *pixels = (unsigned int *) calloc(Mandelbrot::windowWidth * Mandelbrot::windowHeight, 4);
     if (pixels == nullptr) return -1;
 
-    Mandelbrot::Config config = {window, pixels};
+    char *string = (char *) calloc(strlen(Mandelbrot::formatStr), sizeof(char));
+    if (string == nullptr) return -2;
+
+    Mandelbrot::Config config = {window, clock, font, pixels, string};
 
     while (window.isOpen())
     {
@@ -171,6 +192,8 @@ int main()
 
         Mandelbrot::GetMandelbrotSet(config);
 
+        Mandelbrot::GetMandelbrotFPS(config);
+
         window.clear();
 
         Mandelbrot::WindowDraw(config);
@@ -179,6 +202,7 @@ int main()
     }
 
     free(pixels);
+    free(string);
 
     return 0;
 }
