@@ -11,9 +11,9 @@ namespace Mandelbrot
         windowHeight = 720,
     };
 
-    int maxCounter = 1000;
+    int maxCounter = 500;
 
-    float radiusSquaredMax = 4.f;
+    double radiusSquaredMax = 4.f;
 
     const char *  fontSrc   = "Src/Ubuntu-Monospace.ttf";
     const char *formatStr   = "%3.2lf  ";

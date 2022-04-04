@@ -91,28 +91,28 @@ int GetMandelbrotSet(Mandelbrot::Config &config)
 {
     if (config.pixels == nullptr) return Mandelbrot::PixelsAreNullptr;
 
-    float x0_init = config.x0_init;
-    float y0_init = config.y0_init;
+    double x0_init = config.x0_init;
+    double y0_init = config.y0_init;
 
-    float dx =   config.delta;
-    float dy = - config.delta;
+    double dx =   config.delta;
+    double dy = - config.delta;
 
     for (int i = 0; i < Mandelbrot::windowHeight; ++i)
     {
-        float y0 = y0_init + dy * i;
+        double y0 = y0_init + dy * i;
         for (int j = 0; j < Mandelbrot::windowWidth; ++j)
         {
-            float x0 = x0_init + dx * j;
+            double x0 = x0_init + dx * j;
             int n = 0;
 
-            float x = x0 * x0 - y0 * y0 + x0;
-            float y = x0 * y0 + x0 * y0 + y0;
+            double x = x0 * x0 - y0 * y0 + x0;
+            double y = x0 * y0 + x0 * y0 + y0;
 
             while (++n < Mandelbrot::maxCounter && x*x + y*y < Mandelbrot::radiusSquaredMax)
             {
-                float x2 = x * x;
-                float y2 = y * y;
-                float xy = x * y;
+                double x2 = x * x;
+                double y2 = y * y;
+                double xy = x * y;
 
                 x = x2 - y2 + x0;
                 y = xy + xy + y0;
