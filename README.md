@@ -7,11 +7,11 @@ There are 3 branches: noOptimise, AVX2 (8 floats in parallel),
 
 **I measured it with my processor i5-8265U:**
 
-| FPS              |  500  |  1000 |
-| :--------------: | :---: | :---: |
-| noOptimise       | 3.41  | 1.75  |
-| AVX2             | 17.12 | 10.45 |
-| AVX2withDoubles  | 10.67 | 6.08  |
+| Optimisation \ Number of checks:  |  500  |  1000  |
+| :--------------: | :---:          | :---:          |
+| noOptimise       | 3.41  FPS      | 1.75  FPS      |
+| AVX2             | 17.12 FPS (5x) | 10.45 FPS (6x) |
+| AVX2withDoubles  | 10.67 FPS      | 6.08  FPS      |
 
 ### Control Hotkeys
 

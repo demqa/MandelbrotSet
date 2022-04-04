@@ -7,7 +7,7 @@ CC     = g++
 CFLAGS = -c -O3 -mavx -mavx2
 
 OBJDIR = Obj
-MKDIR  = mkdir
+MKDIR  = mkdir -p
 
 all: directories mandelbrot
 

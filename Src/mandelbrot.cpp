@@ -82,10 +82,10 @@ inline void ConfigPixel(Mandelbrot::Config &config, int pixelIndex, int color)
 {
     if (color != Mandelbrot::maxCounter)
     {
-        config.pixels[pixelIndex] = ((unsigned char) (100 * (1 + sin(color * 0.5 + 4))))       |
-                                    ((unsigned char) (100 * (1 + sin(color * 0.5 + 2)))) << 8  |
-                                    ((unsigned char) (100 * (1 + sin(color * 0.5 + 0)))) << 16 |
-                                                                                     0xFF << 24;
+        config.pixels[pixelIndex] = ((unsigned char) (100 * (1 + cos(color * 0.5 + 0))))       |
+                                    ((unsigned char) (100 * (1 + sin(color * 0.9 + 2)))) << 8  |
+                                    ((unsigned char) (100 * (1 + tan(color * 0.3 + 4)))) << 16 |
+                                                                                    0xFF << 24;
     }
     else
     {
