@@ -4,7 +4,7 @@
 
 CC     = g++
 
-CFLAGS = -c -O3 -mavx -mavx2
+CFLAGS = -c -Og -mavx -mavx2
 
 
 all: mandelbrot

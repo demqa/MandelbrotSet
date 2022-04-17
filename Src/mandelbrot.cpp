@@ -82,7 +82,10 @@ inline void ConfigPixel(Mandelbrot::Config &config, int pixelIndex, int color)
 {
     if (color != Mandelbrot::maxCounter)
     {
-        config.pixels[pixelIndex] = 0xFF | (char) rint(100 * (1 + sinf(2 + color))) << 8 | (char) rint(100 * (1 + sinf(4 + color))) << 16 |  (char) rint(100 * (1 + sinf(6 + color))) << 24;
+        config.pixels[pixelIndex] = 0xFF                                          |
+                                   (char) rint(100 * (1 + sinf(2 + color))) <<  8 |
+                                   (char) rint(100 * (1 + sinf(4 + color))) << 16 |
+                                   (char) rint(100 * (1 + sinf(6 + color))) << 24;
     }
     else
     {
@@ -112,9 +115,10 @@ int GetMandelbrotSet(Mandelbrot::Config &config)
         __m256 x0 = _mm256_add_ps(_mm256_set1_ps(x0_init), _76543210dx);
         __m256 y0 = _mm256_set1_ps(y0_single);
 
-        for (int j = 0; j < Mandelbrot::windowWidth; j += 8)
+        for (int j = 0; j < Mandelbrot::windowWidth; j += 8) // 8 floats per 1 cycle
         {
             __m256i N = _mm256_setzero_si256();
+            // N is not N, it is Number of comparations
 
             int n = 0;
 
@@ -141,11 +145,11 @@ int GetMandelbrotSet(Mandelbrot::Config &config)
             }
             while (++n < Mandelbrot::maxCounter);
 
-            for (int nColor = 0; nColor < 8; nColor++)
+            for (int nPixel = 0; nPixel < 8; nPixel++)
             {
-                int *colors = (int *) &N;
+                int *pixels = (int *) &N; // N is cringe
 
-                ConfigPixel(config, Mandelbrot::windowWidth * i + j + nColor, colors[nColor]);
+                ConfigPixel(config, Mandelbrot::windowWidth * i + j + nPixel, pixels[nPixel]);
             }
 
             x0 = _mm256_add_ps(x0, _mm256_mul_ps(_mm256_set1_ps(8), dx));
@@ -167,13 +171,13 @@ int main()
     clock.restart();
 
     sf::Font   font;
-    if (!font.loadFromFile(Mandelbrot::fontSrc)) return -3;
+    if (!font.loadFromFile(Mandelbrot::fontSrc)) return -3; // EXIT_FAILURE
 
     unsigned int *pixels = (unsigned int *) calloc(Mandelbrot::windowWidth * Mandelbrot::windowHeight, 4);
-    if (pixels == nullptr) return -1;
+    if (pixels == nullptr) return -1; // EXIT_FAILURE
 
     char *string = (char *) calloc(strlen(Mandelbrot::formatStr), sizeof(char));
-    if (string == nullptr) return -2;
+    if (string == nullptr) return -2; // EXIT_FAILURE
 
     Mandelbrot::Config config = {window, clock, font, pixels, string};
 
