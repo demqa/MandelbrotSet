@@ -11,7 +11,6 @@ There are 3 branches: noOptimise, AVX2 (8 floats in parallel),
 | :-------------------------------: | :--------------: | :--------------: |
 | noOptimise                        | 3.41  FPS        | 1.75  FPS        |
 | AVX2                              | 17.12 FPS (5.0x) | 10.45 FPS (6.0x) |
-| :-------------------------------: | :--------------: | :--------------: |
 | noOptimiseDoubles                 | 3.28  FPS        | 1.65  FPS        |
 | AVX2withDoubles                   | 10.67 FPS (3.3x) | 6.08  FPS (3.7x) |
 
