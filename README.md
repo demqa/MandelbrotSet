@@ -1,9 +1,6 @@
 # MandelbrotSet visualizer using SFML
 
-There are 3 branches: noOptimise, AVX2 (8 floats in parallel),
-& AVX2withDoubles (4 doubles in parallel).<br>
-**master is equal to AVX2withDoubles**
-
+There are 4 branches: noOptimise, AVX2 (8 floats in parallel), double (no optimise), AVX2withDoubles (4 doubles in parallel).
 
 **I measured it with my processor i5-8265U:**
 
@@ -29,6 +26,7 @@ There are 3 branches: noOptimise, AVX2 (8 floats in parallel),
 
 ```
 git clone https://github.com/demqa/MandelbrotSet.git && cd MandelbrotSet
+# checkout preferred version. for maximum FPS use AVX2, for best experience use AVX2withDoubles
 make && ./mandelbrot
 ```
 
